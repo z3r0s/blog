@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>One Plus - Engineer Mode &#8211; z3r0s</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+    <link rel="canonical" href="http://z3r0s.github.io/2017/12/19/one-plus-engineer-mode/">
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed for z3r0s" href="/feed.xml" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/pixyll.css?201712262047" type="text/css">
+
+    <!-- Fonts -->
+    <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+    
+
+    <!-- Verifications -->
+    
+
+    <!-- Open Graph -->
+    <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="One Plus - Engineer Mode">
+    <meta property="og:description" content="">
+    <meta property="og:url" content="http://z3r0s.github.io/2017/12/19/one-plus-engineer-mode/">
+    <meta property="og:site_name" content="z3r0s">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    
+        <meta name="twitter:site" content="@_z3r0s_" />
+    
+    <meta name="twitter:title" content="One Plus - Engineer Mode" />
+    <meta name="twitter:description" content="" />
+    <meta name="twitter:url" content="http://z3r0s.github.io/2017/12/19/one-plus-engineer-mode/" />
+
+    <!-- Icons -->
+    <!--
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+    -->
+
+    
+</head>
+
+<body class="site">
+
+	
+
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://z3r0s.github.io" class="site-title">z3r0s</a>
+      <nav class="site-nav">
+        
+    
+
+    
+        <a href="/about/">About</a>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+        <a href="/contact/">Contact</a>
+    
+
+    
+
+    
+
+    
+
+
+      </nav>
+      <div class="clearfix"></div>
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h1>One Plus - Engineer Mode</h1>
+  <span class="post-meta">Dec 19, 2017</span><br>
+  
+  <span class="post-meta"><b> - zero</b></span><br/>
+  <span class="post-meta small">
+  
+    4 minute read
+  
+  </span>
+</div>
+
+<article class="post-content">
+  <p><strong>Description</strong>:
+This is a recap of engineer mode app found by <a href="https://github.com/fa0c131y" class="user-mention">@fa0c131y</a> (Elliot Alderson) on One Plus.</p>
+
+<h2 id="issue">Issue</h2>
+
+<p>The manufacturer of One Plus accidentally left out an apk that is used to test the device. As it is a system app, it has many capabilities that the normal user should not have an access to.</p>
+
+<h2 id="features">Features</h2>
+<p>There are so many as it is an app made for testing the various features on the device but I will go through a few features that got the most attention.</p>
+
+<h3 id="privilege-escalation">Privilege Escalation</h3>
+
+<p>This is perhaps the feature that got the most attention from the normal user as it allows to gain a root privilege on the device by sending an intent with a correct secret code.</p>
+
+<p>There are two methods that handle privilege escalation process:</p>
+
+<ul>
+  <li>escalateUp</li>
+  <li>Privilege.escalate</li>
+</ul>
+
+<h3 id="escalateup">escalateUp</h3>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java">private boolean escalatedUp(boolean enable, String password) {
+        boolean ret = true;
+        if (enable) {
+            if (password != null) {
+                enable = Privilege.escalate(password);
+                if (enable) {
+                    SystemProperties.set(&quot;persist.sys.adbroot&quot;, &quot;1&quot;);
+                    SystemProperties.set(&quot;oem.selinux.reload_policy&quot;, &quot;1&quot;);
+                }
+                Log.d(&quot;DiagEnabled&quot;, &quot;privilege escalate &quot; + (enable ? &quot;success&quot; : &quot;failed&quot;));
+            } else {
+                enable = false;
+            }
+            ret = enable;
+        } else {
+            SystemProperties.set(&quot;persist.sys.adbroot&quot;, &quot;0&quot;);
+            Privilege.recover();
+        }
+        Editor e = getSharedPreferences(&quot;privilege&quot;, 0).edit();
+        e.putBoolean(&quot;escalated&quot;, enable);
+        e.commit();
+        updatePrivilegeButton();
+        if (ret) {
+            if (&quot;0&quot;.equals(SystemProperties.get(&quot;persist.sys.adbroot&quot;, &quot;1&quot;))) {
+                new Thread(new Runnable() {
+                    public void run() {
+                        Log.i(&quot;DiagEnabled&quot;, &quot;reboot device...&quot;);
+                        ((PowerManager) DiagEnabled.this.getSystemService(&quot;power&quot;)).reboot(null);
+                    }
+                }).start();
+            } else {
+                SystemProperties.set(&quot;ctl.restart&quot;, &quot;adbd&quot;);
+            }
+        }
+        return ret;
+    }</code></pre></div>
+
+<p>This method checks the given password (if it is not null) by calling <strong>Privilege.escalate(password)</strong>.</p>
+
+<p>If the password is correct, the ‘enabled’ value should be non-zero and system properties <strong>persist.sys.adbroot</strong> and <strong>oem.selinux.reaload_policy</strong> get set.</p>
+
+<h3 id="privilege-class">Privilege class</h3>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java">package com.android.engineeringmode.qualcomm;
+
+public class Privilege {
+    public static native boolean escalate(String str);
+
+    public static native boolean isEscalated();
+
+    public static native void recover();
+
+    static {
+        System.loadLibrary(&quot;door&quot;);
+    }
+}</code></pre></div>
+
+<p>This method is implemented on the native side and as expected the result returns a boolean value. This is effectively a flag that determines if the password was correct or not.</p>
+
+<p>Unfortunatley, I was not able to get the copy of actual library (door) as I do not own any One Plus device. But, looking at the photos posted on twitter, it seems that this method simply compares sha256 hash.</p>
+
+<p>In case of anyone who wants to know the secret code, it’s <strong>angela</strong>. For more details on the native side, just check out his twitter.</p>
+
+<p>Note - There is an interesting method in <strong>CheckRootStatusActivity</strong> class:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java">private boolean checkAngelaRoot() {
+	boolean isAngelaRoot = SystemProperties.get(&quot;persist.sys.adbroot&quot;, &quot;&quot;).equals(&quot;1&quot;);
+	Log.i(&quot;CheckRootStatusActivity&quot;, &quot;my device has been angela root  :&quot; + isAngelaRoot);
+	return isAngelaRoot;
+}</code></pre></div>
+
+<p>Doesn’t the method name sound familar?</p>
+
+<h3 id="unlock">Unlock</h3>
+
+<p>This is another (at least my opinion) interesting feature because the user can (supposedly) unlock the device without contacting the provider.</p>
+
+<p>There are three classes that are involved in locking and unlocking the deivce:</p>
+
+<ul>
+  <li>ClearTelcelnetlock</li>
+  <li>RecoverTelcelnetlock</li>
+  <li>Telcelnetlock</li>
+</ul>
+
+<h3 id="cleartelcelnetlock">ClearTelcelnetlock</h3>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java">protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.e(&quot;ClearTelcelnetlock&quot;, &quot;onCreat!&quot;);
+        if (SystemProperties.get(&quot;ro.oppo.build.exp&quot;, &quot;US&quot;).equalsIgnoreCase(&quot;MX&quot;)) {
+            this.tm = (TelephonyManager) getSystemService(&quot;phone&quot;);
+            mIMEI = this.tm.getDeviceId();
+            this.unlocktimes = Telcelnetlock.getUnlockTimes();
+            if (this.unlocktimes &lt; 0) {
+                Log.e(&quot;ClearTelcelnetlock&quot;, &quot;get unlocktimes failed!&quot;);
+                doFinish();
+                return;
+            } else if (this.unlocktimes &gt;= 5) {
+                Toast.makeText(this, 2131297350, 0).show();
+                SystemProperties.set(&quot;PROPERTY_LOCKFOREVER&quot;, &quot;true&quot;);
+                SendLockForeverBroadcasttoUI();
+                Log.e(&quot;ClearTelcelnetlock&quot;, &quot;get unlocktimes &gt; 5, send lockforever broadcase to ui to lock device immediately!&quot;);
+                doFinish();
+                return;
+            } else {
+                if (checkTelcelNetlock()) {
+                    showTelcelNetLockClearDialog(this);
+                } else {
+                    showTelcelNetLockRecoverDialog(this);
+                }
+                return;
+            }
+        }
+        Log.e(&quot;ClearTelcelnetlock&quot;, &quot;Not MX build, Just exit!&quot;);
+        doFinish();
+}</code></pre></div>
+
+<p>As the name suggested, this class is resposnbile for clearing the lock on the device. It locks the device (if the device is unlocked) by default when this class gets instantiated.</p>
+
+<h3 id="recovertelcelnetlock">RecoverTelcelnetlock</h3>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java">protected void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
+	Log.e(&quot;RecoverTelcelnetlock&quot;, &quot;onCreat!&quot;);
+	if (!SystemProperties.get(&quot;ro.oppo.build.exp&quot;, &quot;US&quot;).equalsIgnoreCase(&quot;MX&quot;)) {
+		Log.e(&quot;RecoverTelcelnetlock&quot;, &quot;Not MX build, Just exit!&quot;);
+		doFinish();
+	} else if (checkTelcelNetlock()) {
+		Toast.makeText(this, &quot;Device is alread locked!&quot;, 0).show();
+		doFinish();
+	} else {
+		showTelcelNetLockRecoverDialog(this);
+	}
+}</code></pre></div>
+
+<p>As the name suggested, this class is responsible for recovering AP telcelnetlock and modem telcelnetlock.</p>
+
+<h3 id="telcelnetlock">Telcelnetlock</h3>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java">package com.android.engineeringmode.qualcomm;
+
+public class Telcelnetlock {
+    public static native boolean addUnlockTimes();
+
+    public static native int check();
+
+    public static native boolean clear();
+
+    public static native int getUnlockTimes();
+
+    public static native boolean match(String str, String str2);
+
+    public static native boolean recover();
+
+    static {
+        System.loadLibrary(&quot;telcelnetlock&quot;);
+    }
+}</code></pre></div>
+
+<p>This is a class that loads the native library, which contains the code for list of methods above. I would love to see the decompiled or even disassembled output of clear method as it seems to be responsible for unlocking the device. If anyone actually owns One Plus device and have looked into this app, let me know.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>There are way more interesting features to look into but I have picked two that probably most of the users in android scene would care about. At the end of the day, it was lost for One Plus and win for the users who wanted to root their device. Everyone can now have a root privilege (on One Plus device or any device that was tested to have this app installed) without unlocking the bootloader, which is great as the users do not have to think about bypassing SafetyNet check.</p>
+
+<p>As far as I am aware, One Plus pushed the update in order to remove engineer mode app. So do not update the device if you still want to have a root privilege. If you still have this app in your hand, you can update the device and still have a root by installing the app manually.</p>
+
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="center">
+  <div class="measure">
+    <small>Being a hacker is 1% perspiration and 99% alcoholism </small>
+    <br/>
+    <small>
+    </small>
+  </div>
+</footer>
+
+</body>
+</html>
