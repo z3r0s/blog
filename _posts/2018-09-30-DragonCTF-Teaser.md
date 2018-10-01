@@ -1,7 +1,7 @@
 ---
 author: zero
 comments: true
-date: 2017-09-14 00:00:00 
+date: 2017-09-30 00:00:00 
 layout: post
 slug: DragonCTF-Teaser 
 title: DragonCTF-Teaser-Brutal Oldskull 
@@ -88,14 +88,14 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
 }
 {% endhighlight %}
 
-Main function does not do much other than creating a window with registered function.  
+**WinMain** function does not do much other than creating a window with some registered functions.  
 
 ## Analysis 
 
 ![score]({{ site.url }}/images/2018/oldskull1.bmp)
 
 
-This program expects five inputs: code1-code4 and the flag. It seems the user input goes through some function and determines whether it is correct or not.
+This program expects five inputs: code1~code4 and the final flag. It seems the user input goes through some functions that determine whether it is correct or not.
 
 **Code Checker**
 
@@ -260,7 +260,7 @@ void code_checker()
 
 In order to pass the check, the user input must be between 0 - 0xFFFF (16 bit) and it has to return NON-ZERO value after going through the **checker**.
 
-Looking at the checker function, the function calls out even more and more functions. It only gets worse and worse...
+Looking at the checker function, this function calls out even more and more functions... 
 
 For your sanity, this is the pseudo code for the checker function:
 
@@ -294,7 +294,7 @@ int checker(char*data,size_t size,int user_input)
  
 {% endhighlight %}
 
-They key point here is that it checks if the last 32 bytes from local buffer are equal to the result (after going through some crazy function)     
+The key point here is that it checks if the last 32 bytes from the local buffer are equal to the result (after going through that **some_crazy_function**).     
 
 ## Solution 
 
@@ -372,15 +372,15 @@ F10::winsettitle,Brutal Oldskull,, macroworld
 
 {% endhighlight %} 
 
-This was more promising since there was a guarantee that it would tell me the value of code...
+This was more promising since there was a guarantee that it would tell me the correct number...
 
-![score]({{ site.url }}/images/2018/oldskull2.bmp)
+![score]({{ site.url }}/images/2018/autohotkey.gif)
 
 But it was taking forever (at least not up to the speed that I was expected. Perhaps, it was due to ImageSearch...)
 
-As my final attempt, I decided to patch the program so that the program itself reveals the code. 
+As my final attempt, I decided to patch the program so that the program itself reveals the answer. 
 
-{% highlight objdump-nasm %}
+{% highlight nasm %}
 
 
 004018E6 | 0FB7C0                   | movzx eax,ax                        | //target1
@@ -403,14 +403,14 @@ I made the following patch to get the code:
 Instruction: movzx eax --> inc ebx,mov eax,ebx
 Opcode: 0FB7C0 --> 4389d8
 
-jne --> je
+Instruction: jne --> je
 Opcdoe: 7511 -->  74 DD 
 
 {% endhighlight %}
 
 By doing so, the program will jump back to `inc ebx` until the return value from the checker function is non-zero.  
 
-Once I got all the correct code, the program reaches the following code:
+Once I got all the correct numbers, the program reaches the following code:
 
 
 {% highlight c %}
@@ -461,7 +461,7 @@ if ( fd )
 
 {% endhighlight %}
  
-This just writes some data return from last checker function to `C:\HOME\AppData\Local\Temp\oldskull_checker.exe`. 
+This just writes some data return from the last checker function to `C:\HOME\AppData\Local\Temp\oldskull_checker.exe`. 
 
 Then, it runs the program and sends the user input (final flag). Based on the return status, it prints `Wrong Flag` or `Well Done! But you know that :)`.
 
@@ -475,7 +475,7 @@ for ( i = 0; i <= 19; ++i )
 }
 {% endhighlight %}
 
-At this point, all I had to do was to write a simple python script that prints out the flag
+At this point, all I had to do was to write a simple python script that prints out the flag.
 
 ```
 ~/Desktop/DRAGONSECTOR2018
