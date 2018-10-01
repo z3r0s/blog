@@ -1,7 +1,7 @@
 ---
 author: zero
 comments: true
-date: 2017-09-30 00:00:00 
+date: 2018-09-30 00:00:00 
 layout: post
 slug: DragonCTF-Teaser 
 title: DragonCTF-Teaser-Brutal Oldskull 
