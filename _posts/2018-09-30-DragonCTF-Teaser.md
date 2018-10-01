@@ -461,7 +461,7 @@ if ( fd )
 
 {% endhighlight %}
  
-This just writes some data return from the last checker function to `C:\HOME\AppData\Local\Temp\oldskull_checker.exe`. (To be more exact, data from a decrypted blob gets written to the file called **oldskull_checker.exe***). 
+This just writes some data return from the last checker function to `C:\HOME\AppData\Local\Temp\oldskull_checker.exe`. (To be more exact, data from a decrypted blob gets written to the file called **oldskull_checker.exe**). 
 
 Then, it runs the program and sends the user input (final flag). Based on the return status, it prints `Wrong Flag` or `Well Done! But you know that :)`.
 
