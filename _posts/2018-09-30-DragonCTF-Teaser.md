@@ -386,12 +386,12 @@ As my final attempt, I decided to patch the program so that the program itself r
 004018E6 | 0FB7C0                   | movzx eax,ax                               | //target1
 004018E9 | 894424 08                | mov dword ptr ss:[esp+8],eax               |
 004018ED | C74424 04 8E4C0000       | mov dword ptr ss:[esp+4],4C8E              |
-004018F5 | C70424 20504000          | mov dword ptr ss:[esp],oldskull.405020     |
+004018F5 | C70424 20504000          | mov dword ptr ss:[esp],oldskull.405020    |
 004018FC | E8 E3FDFFFF              | call oldskull.4016E4                       | //v21 = checker((int)&unk_405020, 0x4C8Eu, v12)
 00401901 | 8945 F0                  | mov dword ptr ss:[ebp-10],eax              |
 00401904 | 837D F0 00               | cmp dword ptr ss:[ebp-10],0                |
 00401908 | 75 11                    | jne oldskull.40191B                        | //target2
-0040190A | C70424 B2A04000          | mov dword ptr ss:[esp],oldskull.40A0B2     | 40A0B2:"Wrong Code 1."
+0040190A | C70424 B2A04000          | mov dword ptr ss:[esp],oldskull.40A0B2    | 40A0B2:"Wrong Code 1."
 00401911 | E8 ACFDFFFF              | call oldskull.4016C2                       |
 
 {% endhighlight %}
