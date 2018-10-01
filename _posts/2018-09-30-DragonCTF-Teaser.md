@@ -458,7 +458,8 @@ if ( fd )
 			CloseHandle(ProcessInformation.hProcess);
 	
 	...
-{% endlight %}
+
+{% endhighlight %}
  
 This just writes some data return from last checker function to `C:\HOME\AppData\Local\Temp\oldskull_checker.exe`. 
 
